@@ -2,6 +2,7 @@ import { derived, get, writable } from "svelte/store";
 import {
 	Files,
 	fourChannelFactory,
+	Thread,
 	Threads,
 	twoChannelFactory,
 	UrlOverrider,
@@ -79,7 +80,7 @@ export function useMediaStore() {
 
 		countTotal.set(settings.reduce((acc, s) => acc + s.boards.length, 0));
 
-		const queueThreads: { vendor: VendorMethods; threads: Threads }[] = [];
+		const queueThreads: { vendor: VendorMethods; thread: Thread }[] = [];
 
 		for (const { vendor, boards } of settings) {
 			const vendorImplement: VendorMethods = vendorsMap?.[vendor];
@@ -92,23 +93,30 @@ export function useMediaStore() {
 				countCurrent.update(count => count + 1);
 			}
 
-			queueThreads.push({ vendor: vendorImplement, threads });
+			threads.forEach(thread => queueThreads.push({ vendor: vendorImplement, thread }));
 		}
 
 		fetchMode.set("files");
-		countTotal.set(queueThreads.reduce((acc, t) => acc + t.threads.length, 0));
+		countTotal.set(queueThreads.length);
 		countCurrent.set(0);
 
-		const queueFiles = queueThreads.map(({ vendor, threads }) =>
-			threads.map(thread =>
+		const partialFetch = async (): Promise<void> => {
+			console.log(queueThreads.length);
+			if (!queueThreads.length) return;
+			const threads = queueThreads.splice(0, 10);
+
+			const queue = threads.map(({ vendor, thread }) =>
 				vendor.fetchFiles(thread).then(fetchedFiles => {
 					files.update(currentFiles => [...currentFiles, ...fetchedFiles]);
 					countCurrent.update(count => count + 1);
 				})
-			)
-		);
+			);
 
-		await Promise.all(queueFiles.flat());
+			await Promise.all(queue);
+			return await partialFetch();
+		};
+
+		await partialFetch();
 
 		isWorked.set(false);
 		isUpdated.set(true);
