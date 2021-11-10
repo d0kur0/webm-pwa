@@ -22,6 +22,17 @@
 }
 
 .controls-time > input {
+	margin: 0 10px;
+}
+
+.controls-time-value {
+	font-size: 0.7em;
+	font-weight: bolder;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+		Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.controls-time > input {
 	width: 100%;
 }
 
@@ -106,6 +117,24 @@ export let file: File;
 
 const dispatch = createEventDispatcher();
 const { volume, currentTime, duration, paused, togglePaused } = usePlayerStore();
+
+function format(seconds) {
+	if (isNaN(seconds)) return "...";
+
+	const minutes = Math.floor(seconds / 60);
+	seconds = Math.floor(seconds % 60);
+	if (seconds < 10) seconds = "0" + seconds;
+
+	return `${minutes}:${seconds}`;
+}
+
+function handlePreviousVideo() {
+	dispatch("previousVideo");
+}
+
+function handleNextVideo() {
+	dispatch("nextVideo");
+}
 </script>
 
 <template>
@@ -137,12 +166,23 @@ const { volume, currentTime, duration, paused, togglePaused } = usePlayerStore()
 							<IoIosPause />
 						{/if}
 					</button>
-					<button class="controls-button"><IoMdArrowRoundBack /></button>
-					<button class="controls-button"><IoMdArrowRoundForward /></button>
+					<button on:click="{handlePreviousVideo}" class="controls-button">
+						<IoMdArrowRoundBack />
+					</button>
+					<button on:click="{handleNextVideo}" class="controls-button">
+						<IoMdArrowRoundForward />
+					</button>
 				</div>
 
 				<div class="controls-time">
-					<input type="range" step="0.1" />
+					<span class="controls-time-value">{format($currentTime)}</span>
+					<input
+						type="range"
+						step="0.01"
+						min="0"
+						max="{$duration}"
+						bind:value="{$currentTime}" />
+					<span class="controls-time-value">{format($duration)}</span>
 				</div>
 
 				<div class="controls-actions">

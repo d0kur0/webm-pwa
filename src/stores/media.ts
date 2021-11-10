@@ -101,10 +101,15 @@ export function useMediaStore() {
 		countCurrent.set(0);
 
 		const partialFetch = async (): Promise<void> => {
-			console.log(queueThreads.length);
-			if (!queueThreads.length) return;
-			const threads = queueThreads.splice(0, 10);
+			if (!queueThreads.length) {
+				isWorked.set(false);
+				isUpdated.set(true);
+				files.update(files => shuffle(files));
+				setFilestoCache(get(files));
+				return;
+			}
 
+			const threads = queueThreads.splice(0, 10);
 			const queue = threads.map(({ vendor, thread }) =>
 				vendor.fetchFiles(thread).then(fetchedFiles => {
 					files.update(currentFiles => [...currentFiles, ...fetchedFiles]);
@@ -117,11 +122,14 @@ export function useMediaStore() {
 		};
 
 		await partialFetch();
+	};
 
-		isWorked.set(false);
-		isUpdated.set(true);
-		files.update(files => shuffle(files));
-		setFilestoCache(get(files));
+	const nextFile = () => {
+		currentIndex.update(index => (index + 1 > get(files).length ? index : index + 1));
+	};
+
+	const previousFile = () => {
+		currentIndex.update(index => (index - 1 < 0 ? index : index - 1));
 	};
 
 	return {
@@ -134,5 +142,7 @@ export function useMediaStore() {
 		isUpdated,
 		fetchFiles,
 		currentIndex,
+		nextFile,
+		previousFile,
 	};
 }
