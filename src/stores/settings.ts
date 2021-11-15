@@ -24,6 +24,8 @@ function getDefaultSettings(): TSettings {
 				{ name: "b", description: "Бред", disabled: false },
 				{ name: "a", description: "Аниме", disabled: false },
 				{ name: "media", description: "Медиа", disabled: false },
+				{ name: "fur", description: "fur", disabled: false },
+				{ name: "fag", description: "fag", disabled: false },
 			],
 		},
 		{

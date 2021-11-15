@@ -1,11 +1,10 @@
 <script lang="ts">
-import { onMount } from "svelte";
-import { derived } from "svelte/store";
 import Player from "../components/Player.svelte";
-
 import PlayerHeader from "../components/PlayerHeader.svelte";
 import { isFilesFromCacheExpired, useMediaStore } from "../stores/media";
 import { useSettingsStore } from "../stores/settings";
+import { onMount } from "svelte";
+import { derived } from "svelte/store";
 
 const {
 	files,
@@ -28,9 +27,10 @@ onMount(() => {
 	isFilesFromCacheExpired() && fetchFiles($settings);
 });
 
-const file = derived([currentIndex, files], ([currentIndex, files]) => {
-	return files[currentIndex];
-});
+const file = derived(
+	[currentIndex, files],
+	([currentIndex, files]) => files[currentIndex]
+);
 </script>
 
 <template>

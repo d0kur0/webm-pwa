@@ -1,19 +1,15 @@
+import { requiredFileTypes, urlOverrider } from "../utils/webmFinderOptions";
+import type { TSettings } from "./settings";
+import { shuffle } from "lodash";
 import { derived, get, writable } from "svelte/store";
 import {
 	Files,
-	fourChannelFactory,
 	Thread,
 	Threads,
-	twoChannelFactory,
-	UrlOverrider,
 	VendorMethods,
+	fourChannelFactory,
+	twoChannelFactory,
 } from "webm-finder";
-import type { TSettings } from "./settings";
-import { shuffle } from "lodash";
-
-const requiredFileTypes = ["webm", "mp4"];
-const urlOverrider: UrlOverrider = url =>
-	`https://cors-suck-my-dick.herokuapp.com/?endpoint=${encodeURI(url)}`;
 
 const vendorsMap = {
 	"2ch.hk": twoChannelFactory({ requiredFileTypes, urlOverrider }),
@@ -32,12 +28,12 @@ function getFilesFromCache(): Files {
 	}
 }
 
-function setFilestoCache(files: Files) {
+function setFilesToCache(files: Files) {
 	try {
 		localStorage.filesCache = JSON.stringify(files);
 		localStorage.lastFilesUpdate = Math.floor(Date.now() / 1000);
 	} catch (error) {
-		console.warn("error on setFilestoCache");
+		console.warn("error on setFilesToCache");
 		console.error(error);
 	}
 }
@@ -105,7 +101,7 @@ export function useMediaStore() {
 				isWorked.set(false);
 				isUpdated.set(true);
 				files.update(files => shuffle(files));
-				setFilestoCache(get(files));
+				setFilesToCache(get(files));
 				return;
 			}
 
