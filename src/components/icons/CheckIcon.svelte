@@ -3,7 +3,6 @@
 	x="0px"
 	y="0px"
 	width="405.272px"
-	height="405.272px"
 	viewBox="0 0 405.272 405.272"
 	fill="currentColor"
 	xml:space="preserve">

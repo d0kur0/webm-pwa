@@ -37,7 +37,7 @@
 
 .controls-group {
 	margin: 0 5px;
-	padding: 4px 6px;
+	padding: 1px 6px;
 	border-radius: 10px;
 	background-color: var(--page-background);
 	opacity: 0.8;
@@ -63,6 +63,10 @@
 
 .controls-button:hover {
 	opacity: 0.9;
+}
+
+.controls-button-active {
+	color: var(--accent-color);
 }
 
 .controls-time {
@@ -92,6 +96,12 @@
 .controls-volume input {
 	width: 50px;
 }
+
+.controls-volume-icon {
+	display: flex;
+	width: 18px;
+	padding: 0 4px;
+}
 </style>
 
 <script lang="ts">
@@ -99,20 +109,39 @@ import { usePlayerStore } from "../stores/player";
 import { formatVideoTime } from "../utils/formatVideoTime";
 import BackwardIcon from "./icons/BackwardIcon.svelte";
 import ForwardIcon from "./icons/ForwardIcon.svelte";
+import MaximizeIcon from "./icons/MaximizeIcon.svelte";
+import MinimizeIcon from "./icons/MinimizeIcon.svelte";
 import PauseIcon from "./icons/PauseIcon.svelte";
 import PlayIcon from "./icons/PlayIcon.svelte";
+import RepeatIcon from "./icons/RepeatIcon.svelte";
 import SoundIcon from "./icons/SoundIcon.svelte";
 import { createEventDispatcher } from "svelte";
 import type { File } from "webm-finder";
 
 export let file: File;
 
-const { volume, currentTime, duration, paused, togglePaused } = usePlayerStore;
+const {
+	volume,
+	currentTime,
+	duration,
+	paused,
+	isMaximize,
+	isRepeat,
+	toggleIsRepeat,
+	togglePaused,
+} = usePlayerStore;
 
 const dispatch = createEventDispatcher();
 
 const handlePreviousVideo = () => dispatch("previousVideo");
 const handleNextVideo = () => dispatch("nextVideo");
+const handleFullScreen = () => {
+	$isMaximize
+		? document.exitFullscreen()
+		: document.querySelector(".player")?.requestFullscreen();
+
+	isMaximize.update(isMaximize => !isMaximize);
+};
 </script>
 
 <div class="title-container">
@@ -129,17 +158,25 @@ const handleNextVideo = () => dispatch("nextVideo");
 <div class="controls-container">
 	<div class="controls">
 		<div class="controls-group">
-			<button on:click="{togglePaused}" class="controls-button">
+			<button
+				title="{$paused ? `play` : `pause`}"
+				on:click="{togglePaused}"
+				class="controls-button">
 				{#if $paused}
 					<PlayIcon />
 				{:else}
 					<PauseIcon />
 				{/if}
 			</button>
-			<button on:click="{handlePreviousVideo}" class="controls-button">
+
+			<button
+				title="previous video"
+				on:click="{handlePreviousVideo}"
+				class="controls-button">
 				<BackwardIcon />
 			</button>
-			<button on:click="{handleNextVideo}" class="controls-button">
+
+			<button title="next video" on:click="{handleNextVideo}" class="controls-button">
 				<ForwardIcon />
 			</button>
 		</div>
@@ -156,11 +193,31 @@ const handleNextVideo = () => dispatch("nextVideo");
 		</div>
 
 		<div class="controls-group controls-volume">
-			<button class="controls-button">
+			<span class="controls-volume-icon">
 				<SoundIcon />
-			</button>
+			</span>
 
 			<input step="0.1" min="0" max="1" type="range" bind:value="{$volume}" />
+		</div>
+
+		<div class="controls-group">
+			<button
+				on:click="{toggleIsRepeat}"
+				class:controls-button-active="{$isRepeat}"
+				class="controls-button"
+				title="enable repeat">
+				<RepeatIcon />
+			</button>
+			<button
+				on:click="{handleFullScreen}"
+				class="controls-button"
+				title="{$isMaximize ? `maximize video` : `minimize video`}">
+				{#if $isMaximize}
+					<MinimizeIcon />
+				{:else}
+					<MaximizeIcon />
+				{/if}
+			</button>
 		</div>
 	</div>
 </div>

@@ -26,7 +26,7 @@ import type { File } from "webm-finder";
 export let file: File;
 
 const dispatch = createEventDispatcher();
-const { volume, currentTime, duration, paused } = usePlayerStore;
+const { volume, currentTime, duration, paused, isRepeat } = usePlayerStore;
 
 const handlePreviousVideo = () => dispatch("previousVideo");
 const handleNextVideo = () => dispatch("nextVideo");
@@ -38,10 +38,13 @@ const handleNextVideo = () => dispatch("nextVideo");
 			<!-- svelte-ignore a11y-media-has-caption -->
 			<video
 				autoplay
+				loop="{$isRepeat}"
 				bind:paused="{$paused}"
 				bind:duration="{$duration}"
 				bind:currentTime="{$currentTime}"
 				bind:volume="{$volume}"
+				on:ended="{handleNextVideo}"
+				on:error="{handleNextVideo}"
 				class="player-video"
 				src="{wrapVideoUrl(file.url)}"></video>
 
