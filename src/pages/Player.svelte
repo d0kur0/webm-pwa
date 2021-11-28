@@ -18,6 +18,7 @@ const {
 	currentIndex,
 	nextFile,
 	previousFile,
+	removeCurrentFile,
 } = useMediaStore();
 
 const { settings } = useSettingsStore;
@@ -31,6 +32,11 @@ const file = derived(
 	[currentIndex, files],
 	([currentIndex, files]) => files[currentIndex]
 );
+
+const handleErrorVideo = () => {
+	removeCurrentFile();
+	nextFile();
+};
 </script>
 
 <template>
@@ -42,5 +48,9 @@ const file = derived(
 		countTotal="{$countTotal}"
 		countCurrent="{$countCurrent}" />
 
-	<Player on:previousVideo="{previousFile}" on:nextVideo="{nextFile}" file="{$file}" />
+	<Player
+		on:previousVideo="{previousFile}"
+		on:nextVideo="{nextFile}"
+		on:errorVideo="{handleErrorVideo}"
+		file="{$file}" />
 </template>

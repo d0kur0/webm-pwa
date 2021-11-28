@@ -21,20 +21,34 @@ function getDefaultSettings(): TSettings {
 		{
 			vendor: "2ch.hk",
 			boards: [
-				{ name: "b", description: "Бред", disabled: false },
-				{ name: "a", description: "Аниме", disabled: false },
-				{ name: "media", description: "Медиа", disabled: false },
-				{ name: "fur", description: "fur", disabled: false },
-				{ name: "fag", description: "fag", disabled: false },
+				{ name: "b", description: "Бред", disabled: true },
+				{ name: "mu", description: "Музыка", disabled: false },
+				{ name: "a", description: "Аниме", disabled: true },
+				{ name: "media", description: "Медиа", disabled: true },
+				{ name: "fur", description: "Фурри", disabled: true },
+				{ name: "fag", description: "Фагготрия", disabled: true },
+				{ name: "fet", description: "Фетиш", disabled: true },
+				{ name: "e", description: "Extreme pron", disabled: true },
+				{ name: "hc", description: "Hardcore", disabled: true },
+				{ name: "gg", description: "Красивые девушки", disabled: true },
+				{ name: "o", description: "Рисовач", disabled: true },
+				{ name: "rf", description: "Убежище", disabled: true },
+				{ name: "mlp", description: "Pony", disabled: true },
 			],
 		},
 		{
 			vendor: "4chan.org",
 			boards: [
-				{ name: "b", description: "Random", disabled: false },
-				{ name: "h", description: "Hentai", disabled: false },
-				{ name: "ec", description: "Ecchi", disabled: false },
-				{ name: "hc", description: "Hard Core", disabled: false },
+				{ name: "b", description: "Random", disabled: true },
+				{ name: "h", description: "Hentai", disabled: true },
+				{ name: "ec", description: "Ecchi", disabled: true },
+				{ name: "hc", description: "Hard Core", disabled: true },
+				{ name: "a", description: "Anime & Manga", disabled: true },
+				{ name: "c", description: "Anime/Cute", disabled: true },
+				{ name: "co", description: "Comics & Cartoons", disabled: true },
+				{ name: "mu", description: "Music", disabled: false },
+				{ name: "vip", description: "Very Important Posts", disabled: true },
+				{ name: "mlp", description: "Pony", disabled: true },
 			],
 		},
 	];
@@ -78,8 +92,8 @@ function getMergedSettings(): TSettings {
 			if (!overridedBoard) return board;
 
 			return {
-				name: overridedBoard?.name || "??? err",
-				description: overridedBoard?.description || "??? err",
+				name: board.name || "??? err",
+				description: board.description || "??? err",
 				disabled: Boolean(overridedBoard?.disabled),
 			} as TBoard;
 		});

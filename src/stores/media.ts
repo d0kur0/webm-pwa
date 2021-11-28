@@ -128,6 +128,13 @@ export function useMediaStore() {
 		currentIndex.update(index => (index - 1 < 0 ? index : index - 1));
 	};
 
+	const removeCurrentFile = () => {
+		files.update(files => {
+			files.splice(get(currentIndex), 1);
+			return files;
+		});
+	};
+
 	return {
 		files,
 		fetchMode,
@@ -140,5 +147,6 @@ export function useMediaStore() {
 		currentIndex,
 		nextFile,
 		previousFile,
+		removeCurrentFile,
 	};
 }

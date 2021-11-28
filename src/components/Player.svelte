@@ -30,6 +30,7 @@ const { volume, currentTime, duration, paused, isRepeat } = usePlayerStore;
 
 const handlePreviousVideo = () => dispatch("previousVideo");
 const handleNextVideo = () => dispatch("nextVideo");
+const handleErrorVideo = () => dispatch("errorVideo");
 </script>
 
 <template>
@@ -44,7 +45,7 @@ const handleNextVideo = () => dispatch("nextVideo");
 				bind:currentTime="{$currentTime}"
 				bind:volume="{$volume}"
 				on:ended="{handleNextVideo}"
-				on:error="{handleNextVideo}"
+				on:error="{handleErrorVideo}"
 				class="player-video"
 				src="{wrapVideoUrl(file.url)}"></video>
 
