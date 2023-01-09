@@ -12,8 +12,7 @@ import {
 } from "webm-finder";
 
 const vendorsMap = {
-	"2ch.hk": twoChannelFactory({ requiredFileTypes, urlOverrider }),
-	"4chan.org": fourChannelFactory({ requiredFileTypes, urlOverrider }),
+	"2ch.hk": twoChannelFactory({ requiredFileTypes }),
 };
 
 function getFilesFromCache(): Files {
