@@ -36,21 +36,6 @@ function getDefaultSettings(): TSettings {
 				{ name: "mlp", description: "Pony", disabled: true },
 			],
 		},
-		{
-			vendor: "4chan.org",
-			boards: [
-				{ name: "b", description: "Random", disabled: true },
-				{ name: "h", description: "Hentai", disabled: true },
-				{ name: "ec", description: "Ecchi", disabled: true },
-				{ name: "hc", description: "Hard Core", disabled: true },
-				{ name: "a", description: "Anime & Manga", disabled: true },
-				{ name: "c", description: "Anime/Cute", disabled: true },
-				{ name: "co", description: "Comics & Cartoons", disabled: true },
-				{ name: "mu", description: "Music", disabled: false },
-				{ name: "vip", description: "Very Important Posts", disabled: true },
-				{ name: "mlp", description: "Pony", disabled: true },
-			],
-		},
 	];
 }
 
